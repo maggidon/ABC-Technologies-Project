@@ -3,22 +3,22 @@ kind: Deployment
 metadata:
   name: ci-cd
   labels:
-    app: ci-cd # Label applied to deployment
+    app: ci-cd
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: ci-cd # Pods will have this label
+      app: ci-cd
   template:
     metadata:
       labels:
-        app: ci-cd # Pods inherit this label
-  spec:
-    containers:
-    - name: ci-cd
-      image: maggidon/ci-cd:latest
-      ports:
-      - containerPort: 8082 # Match the exposed port
+        app: ci-cd
+    spec: # <-- This is the correct 'spec' for the Pod template
+      containers:
+      - name: ci-cd
+        image: maggidon/ci-cd:latest
+        ports:
+        - containerPort: 8082 # Match the exposed port
 
 ---
 
@@ -26,12 +26,13 @@ apiVersion: v1
 kind: Service
 metadata:
   name: abc-nodeport-svc
-spec:
+spec: # <-- This is the correct 'spec' for the Service
   selector:
-    app: ci-cd # This must match the pod label
-ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 8082
-    nodePort: 31879
-type: NodePort
+    matchLabels:
+      app: ci-cd # This must match the pod label
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8082
+      nodePort: 31879
+  type: NodePort
