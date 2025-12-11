@@ -21,15 +21,13 @@ spec:
         - containerPort: 8082 # Match the exposed port
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
   name: abc-nodeport-svc
-spec: # <-- This is the correct 'spec' for the Service
-  selector:
-    matchLabels:
-      app: ci-cd # This must match the pod label
+spec:
+  selector: # <-- The selector field
+    app: ci-cd # <-- The label key/value pair is indented under selector
   ports:
     - protocol: TCP
       port: 80
